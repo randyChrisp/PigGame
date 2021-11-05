@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using PigGame.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +10,54 @@ namespace PigGame.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        [HttpGet]
+        public ViewResult Index()
         {
-            return View();
+            GameSession session = new GameSession(HttpContext.Session);
+            Game game = session.GetGame();
+
+            if (game.IsGameOver)
+            {
+                TempData["message"] = $"{game.CurrentPlayer} wins!";
+            }
+
+            return View(game);
+        }
+
+        [HttpPost]
+        public RedirectToActionResult NewGame()
+        {
+            GameSession session = new GameSession(HttpContext.Session);
+            Game game = session.GetGame();
+
+            game.NewGame();
+            session.SetGame(game);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public RedirectToActionResult Hold()
+        {
+            GameSession session = new GameSession(HttpContext.Session);
+            Game game = session.GetGame();
+
+            game.Hold();
+            session.SetGame(game);
+
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+
+        public RedirectToActionResult Roll()
+        {
+            GameSession session = new GameSession(HttpContext.Session);
+            Game game = session.GetGame();
+
+            game.Roll();
+            session.SetGame(game);
+
+            return RedirectToAction("Index");
         }
     }
 }

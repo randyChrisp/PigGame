@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace PigGame.Models
 {
-    public class Session
+    public class GameSession
     {
         private ISession session;
 
         private const string GameKey = "pigGame";
 
-        public Session(ISession session)
+        public GameSession(ISession session)
         {
             this.session = session;
         }
